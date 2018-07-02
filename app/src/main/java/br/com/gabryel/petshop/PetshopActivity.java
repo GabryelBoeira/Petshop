@@ -92,6 +92,46 @@ public class PetshopActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+
+        //notificação para salvar e aterar junto ao dos dados
+        final EditText txtDescrição = (EditText) findViewById(R.id.txtProcedimento);
+        DatePicker data = (DatePicker) findViewById(R.id.data);
+        TimePicker hora = (TimePicker) findViewById(R.id.hora);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, data.getDayOfMonth());
+        calendar.set(Calendar.MONTH, data.getMonth());
+        calendar.set(Calendar.YEAR, data.getYear());
+        calendar.set(Calendar.HOUR_OF_DAY, hora.getCurrentHour());
+        calendar.set(Calendar.MINUTE, hora.getCurrentMinute());
+
+        Timer t = new Timer();
+        t.schedule(new TimerTask() {
+            public void run() {
+
+
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(PetshopActivity.this)
+                                .setSmallIcon(R.drawable.index)
+                                .setContentTitle("Hora de busca do pet")
+                                .setContentText(txtDescrição.getText().toString())
+                                .setVibrate(new long[]{100, 250});
+// Cria o intent que irá chamar a atividade a ser aberta quando clicar na notifição
+                Intent resultIntent = new Intent(PetshopActivity.this, PetshopActivity.class);
+
+//PendingIntent é "vinculada" a uma notification para abrir a intent
+                PendingIntent resultPendingIntent = PendingIntent.
+                        getActivity(PetshopActivity.this, 0, resultIntent, 0);
+
+//associa o intent na notificação
+                mBuilder.setContentIntent(resultPendingIntent);
+                NotificationManager mNotificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//gera a notificação
+                mNotificationManager.notify(99, mBuilder.build());
+            }
+        }, calendar.getTime());
+
         if (id == R.id.save) {
 
             EditText txtNome = (EditText) findViewById(R.id.txtNome);
@@ -119,11 +159,8 @@ public class PetshopActivity extends AppCompatActivity {
             byte[] imageInByte = baos.toByteArray();
             petshop.setImagem(imageInByte);
 
-
-
             new PetshopDao().salvar(petshop);
             petshop = null;
-
 
             Toast.makeText(getApplicationContext(),
                     "Salvo com sucesso!",
@@ -161,47 +198,5 @@ public class PetshopActivity extends AppCompatActivity {
             ImageView image = (ImageView) findViewById(R.id.image);
             image.setImageBitmap(photo);
         }
-    }
-
-    //area para a notificação
-    public void agendar(View view) {
-
-        final EditText txtProcedimento = (EditText) findViewById(R.id.txtProcedimento);
-        DatePicker data = (DatePicker) findViewById(R.id.data);
-        TimePicker hora = (TimePicker) findViewById(R.id.hora);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, data.getDayOfMonth());
-        calendar.set(Calendar.MONTH, data.getMonth());
-        calendar.set(Calendar.YEAR, data.getYear());
-        calendar.set(Calendar.HOUR_OF_DAY, hora.getCurrentHour());
-        calendar.set(Calendar.MINUTE, hora.getCurrentMinute());
-
-        Timer t = new Timer();
-        t.schedule(new TimerTask() {
-            public void run() {
-
-
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(PetshopActivity.this)
-                                .setSmallIcon(R.drawable.index)
-                                .setContentTitle("Hora de busca do pet")
-                                .setContentText(txtProcedimento.getText().toString())
-                                .setVibrate(new long[]{100, 250});
-// Cria o intent que irá chamar a atividade a ser aberta quando clicar na notifição
-                Intent resultIntent = new Intent(PetshopActivity.this, PetshopActivity.class);
-
-//PendingIntent é "vinculada" a uma notification para abrir a intent
-                PendingIntent resultPendingIntent = PendingIntent.
-                        getActivity(PetshopActivity.this, 0, resultIntent, 0);
-
-//associa o intent na notificação
-                mBuilder.setContentIntent(resultPendingIntent);
-                NotificationManager mNotificationManager =
-                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//gera a notificação
-                mNotificationManager.notify(99, mBuilder.build());
-            }
-        }, calendar.getTime());
     }
 }
