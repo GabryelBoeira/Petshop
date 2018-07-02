@@ -146,12 +146,12 @@ public class PetshopActivity extends AppCompatActivity {
                 petshop = new Petshop();
             }
 
-            txtNome.setText(petshop.getNomeDono());
-            txtNomeAnimal.setText(petshop.getNomeAnimal());
-            txtProcedimento.setText(petshop.getProcedimento());
-            spTipo.setSelection(((ArrayAdapter) spTipo.getAdapter()).getPosition(petshop.getTipo()));
-            txtTelefone.setText(petshop.getNumero());
-            checkAtivo.setChecked(petshop.isAtivo());
+            petshop.setNomeDono(txtNome.getText().toString());
+            petshop.setNomeAnimal(txtNomeAnimal.getText().toString());
+            petshop.setTipo(spTipo.getSelectedItem().toString());
+            petshop.setNumero(txtTelefone.getText().toString());
+            petshop.setProcedimento(txtProcedimento.getText().toString());
+            petshop.setAtivo(checkAtivo.isChecked());
 
             Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -161,7 +161,7 @@ public class PetshopActivity extends AppCompatActivity {
 
             new PetshopDao().salvar(petshop);
             petshop = null;
-
+            
             Toast.makeText(getApplicationContext(),
                     "Salvo com sucesso!",
                     Toast.LENGTH_LONG).show();
