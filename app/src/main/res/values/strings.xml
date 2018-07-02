@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Petshop</string>
+    <string name="action_settings">Settings</string>
+
+    <array name="tipos">
+        <item>Cachorro</item>
+        <item>Gato</item>
+        <item>Passaro</item>
+        <item>Tartaruga</item>
+        <item>Peixe</item>
+        <item>Cavalo</item>
+    </array>
+</resources>
